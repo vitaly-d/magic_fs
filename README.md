@@ -9,13 +9,15 @@ Ubuntu:
 ```
 
 ```
-pip install -U .
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements
 ```
 
 
 ### Build a wheel
 ```
-pip install --upgrade pip setuptools pep517
 python -m pep517.build .
 ```
 
