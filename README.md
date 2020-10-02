@@ -36,6 +36,7 @@ def walk(fs):
         if archive_fs is not None:
             archive_fs.tree()
             walk(archive_fs)
+            continue
 
         # do something useful for given path
         print(path, fs.magic(path))
