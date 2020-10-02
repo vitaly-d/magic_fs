@@ -17,12 +17,22 @@ class MagicMixin:
     """adds magic() to a FS
 
     It might be useful to override getinfo, but, it was decided to implement
-    a separate method because file.read() is called to get out 'magic bytes'
+    a separate method because file.read() is called to access 'magic bytes'
     """
 
-    def magic(self, path, mime=False):
+    def magic(
+        self, path: Text, mime: bool = False, bytes_to_read: int = _MAGIC_READ
+    ) -> Text:
+        """
+        path: file path
+        mime: return mimeType
+        bytes_to_read: "recommend using at least the first 2048 bytes, as less can produce incorrect identification",
+                        see https://pypi.org/project/python-magic/
+
+
+        """
         _path = self.validatepath(path)
-        return magic.from_buffer(self.open(_path, "rb").read(_MAGIC_READ), mime=mime)
+        return magic.from_buffer(self.open(_path, "rb").read(bytes_to_read), mime=mime)
 
 
 class OSFS(_OSFS, MagicMixin):
