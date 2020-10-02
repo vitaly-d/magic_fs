@@ -9,16 +9,37 @@ Could it be useful for other puroposes? Probably yes, if you want to [use pyfile
 
 ### Installation
 
-#### Native libraries
-```
+#### Native dependencies
 macOS:
+```
 brew install libmagic rar
-
-Ubuntu:
 ```
 
-#### Python 
-```pip install .
+Docker(Ubuntu):
+```
+TODO
+```
+
+#### This library 
+```
+pip install git+https://github.com/vitaly-d/magic_fs
+```
+
+### Usage:
+```python
+
+from magic_fs.fs import OSFS, mount_archive
+
+def walk(fs):
+    for path in fs.walk.files():
+        archive_fs = mount_archive(fs, path)
+        if archive_fs is not None:
+            archive_fs.tree()
+            walk(archive_fs)
+
+        # do something useful for given path
+        print(path, fs.magic(path))
+
 ```
 
 
