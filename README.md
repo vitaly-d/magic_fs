@@ -40,6 +40,8 @@ def walk(fs):
 
         # do something useful for given path
         print(path, fs.magic(path))
+        
+walk(OSFS("/Volumes/Dataset"))        
 
 ```
 
