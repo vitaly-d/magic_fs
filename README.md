@@ -1,6 +1,6 @@
 ### Introduction
 
-This is a tiny library that combines [PyFilesystem2](https://docs.pyfilesystem.org/en/latest/index.html) and [python-magic](https://pypi.org/project/python-magic/). It is built exclusively for a project I'm working on to analyse data packages that look like a bunch of files, zip/rar archives, exotic structures such as a zip file within another zip, etc.
+This is a tiny library that combines [PyFilesystem2](https://docs.pyfilesystem.org/en/latest/index.html) and [python-magic](https://pypi.org/project/python-magic/). It is built for a project I'm working on to analyse data packages that look like a bunch of files, zip/rar archives, exotic structures such as a zip file within another zip, etc.
 
 Could it be useful for other puroposes? maybe, if you want to [use pyfilesystem2](https://docs.pyfilesystem.org/en/latest/guide.html#why-use-pyfilesystem) with
  - [rar archives](https://rarfile.readthedocs.io/index.html)
