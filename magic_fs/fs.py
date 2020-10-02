@@ -17,7 +17,7 @@ class MagicMixin:
     """adds magic() to a FS
 
     It might be useful to override getinfo, but, it was decided to implement
-    a separate method because it requres reading a file content to get magic
+    a separate method because file.read() is called to get out 'magic bytes'
     """
 
     def magic(self, path, mime=False):
