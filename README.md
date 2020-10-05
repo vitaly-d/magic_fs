@@ -12,7 +12,7 @@ Could it be useful for other puroposes? maybe, if you want to [use pyfilesystem2
 #### Native dependencies
 macOS:
 ```
-brew install libmagic rar
+brew install unrar libmagic
 ```
 
 Docker(Ubuntu):
