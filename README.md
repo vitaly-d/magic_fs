@@ -17,7 +17,7 @@ brew install libmagic rar
 
 Docker(Ubuntu):
 ```
-TODO
+RUN apt-get update && apt-get install -y unrar libmagic1
 ```
 
 #### This library 
