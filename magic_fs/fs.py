@@ -61,15 +61,25 @@ class ReadRarFS(_ReadRarFS, MagicMixin):
         super().__init__(file, encoding)
 
 
+_supported_formats = {
+    (".zip",): ReadZipFS,
+    (".tar", ".gz"): ReadTarFS,
+    (".rar",): ReadRarFS,
+}
+
+
+def _key(parent_fs, path):
+    return tuple(parent_fs.getinfo(path).suffixes)
+
+
+def is_archive(parent_fs, path):
+
+    return _key(parent_fs, path) in _supported_formats.keys()
+
+
 def mount_archive(parent_fs, path):
 
-    supported_formats = {
-        (".zip",): ReadZipFS,
-        (".tar", ".gz"): ReadTarFS,
-        (".rar",): ReadRarFS,
-    }
-
-    mount_fs = supported_formats.get(tuple(parent_fs.getinfo(path).suffixes), None)
+    mount_fs = _supported_formats.get(_key(parent_fs, path), None)
     if mount_fs:
         return mount_fs(parent_fs.open(path, "rb"))
     else:
