@@ -79,6 +79,7 @@ class ReadRarFS(_ReadRarFS, MagicMixin):
 _supported_formats = {
     (".zip",): ReadZipFS,
     (".tar", ".gz"): ReadTarFS,
+    (".tar",): ReadTarFS,
     (".rar",): ReadRarFS,
     ("application/gzip",): ReadTarFS,
     ("application/zip",): ReadZipFS,
