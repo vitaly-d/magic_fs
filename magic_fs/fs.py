@@ -80,11 +80,17 @@ _supported_formats = {
     (".zip",): ReadZipFS,
     (".tar", ".gz"): ReadTarFS,
     (".rar",): ReadRarFS,
+    ("application/gzip",): ReadTarFS,
+    ("application/zip",): ReadZipFS,
 }
 
 
 def _key(parent_fs, path):
-    return tuple(parent_fs.getinfo(path).suffixes)
+    _key = tuple(parent_fs.getinfo(path).suffixes)
+    if not _key:
+        _key = (parent_fs.magic(path, mime=True),)
+
+    return _key
 
 
 def is_archive(parent_fs, path):
