@@ -1,8 +1,10 @@
-from typing import BinaryIO, Text, SupportsInt, Union
+from typing import BinaryIO, Text, SupportsInt, Union, TypeVar
 
 import magic
 
+from fs.base import FS
 from fs.osfs import OSFS as _OSFS
+from fs.subfs import SubFS as _SubFS
 from fs.tarfs import ReadTarFS as _ReadTarFS
 from fs.zipfs import ReadZipFS as _ReadZipFS
 
@@ -11,6 +13,8 @@ from .rar import ReadRarFS as _ReadRarFS
 
 _MAGIC_READ = 4096
 _ENC = "utf-8"
+
+FileSystem = TypeVar("FileSystem", bound="FS", covariant=True)
 
 
 class MagicMixin:
@@ -44,6 +48,11 @@ class OSFS(_OSFS, MagicMixin):
         expand_vars: bool = True,
     ):
         super().__init__(root_path, create, create_mode, expand_vars)
+
+
+class SubFS(_SubFS, MagicMixin):
+    def __init__(self, parent_fs: FileSystem, path: Text):
+        super().__init__(parent_fs, path)
 
 
 class ReadTarFS(_ReadTarFS, MagicMixin):
