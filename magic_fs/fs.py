@@ -85,11 +85,17 @@ _supported_formats = {
     "application/zip": ReadZipFS,
 }
 
+_unsupported_formats = {(".synctex", ".gz")}
+
 
 def _key(parent_fs, path):
+
+    if tuple(parent_fs.getinfo(path).suffixes) in _unsupported_formats:
+        return "unsupported"
+
     _key = parent_fs.getinfo(path).suffix
     if not _key:
-        _key = (parent_fs.magic(path, mime=True),)
+        _key = parent_fs.magic(path, mime=True)
 
     return _key
 
