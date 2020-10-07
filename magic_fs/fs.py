@@ -5,6 +5,7 @@ import magic
 from fs.base import FS
 from fs.osfs import OSFS as _OSFS
 from fs.subfs import SubFS as _SubFS
+from fs.memoryfs import MemoryFS as _MemoryFS
 from fs.tarfs import ReadTarFS as _ReadTarFS
 from fs.zipfs import ReadZipFS as _ReadZipFS
 
@@ -53,6 +54,11 @@ class OSFS(_OSFS, MagicMixin):
 class SubFS(_SubFS, MagicMixin):
     def __init__(self, parent_fs: FileSystem, path: Text):
         super().__init__(parent_fs, path)
+
+
+class MemoryFS(_MemoryFS, MagicMixin):
+    def __init__(self):
+        super().__init__()
 
 
 class ReadTarFS(_ReadTarFS, MagicMixin):
