@@ -77,17 +77,17 @@ class ReadRarFS(_ReadRarFS, MagicMixin):
 
 
 _supported_formats = {
-    (".zip",): ReadZipFS,
-    (".tar", ".gz"): ReadTarFS,
-    (".tar",): ReadTarFS,
-    (".rar",): ReadRarFS,
-    ("application/gzip",): ReadTarFS,
-    ("application/zip",): ReadZipFS,
+    ".zip": ReadZipFS,
+    ".gz": ReadTarFS,
+    ".tar": ReadTarFS,
+    ".rar": ReadRarFS,
+    "application/gzip": ReadTarFS,
+    "application/zip": ReadZipFS,
 }
 
 
 def _key(parent_fs, path):
-    _key = tuple(parent_fs.getinfo(path).suffixes)
+    _key = parent_fs.getinfo(path).suffix
     if not _key:
         _key = (parent_fs.magic(path, mime=True),)
 
