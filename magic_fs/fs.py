@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import BinaryIO, Text, SupportsInt, Union, TypeVar
 
 import magic
@@ -25,8 +26,16 @@ class MagicMixin:
     a separate method because file.read() is called to access 'magic bytes'
     """
 
+    @staticmethod
+    def _create_magic(mime=True, uncompress=False):
+        return magic.Magic(mime=mime, uncompress=uncompress)
+
     def magic(
-        self, path: Text, mime: bool = False, bytes_to_read: int = _MAGIC_READ
+        self,
+        path: Text,
+        mime: bool = False,
+        uncompress=False,
+        bytes_to_read: int = _MAGIC_READ,
     ) -> Text:
         """
         path: file path
@@ -37,7 +46,8 @@ class MagicMixin:
 
         """
         _path = self.validatepath(path)
-        return magic.from_buffer(self.open(_path, "rb").read(bytes_to_read), mime=mime)
+        f = self._create_magic(mime=mime, uncompress=uncompress)
+        return f.from_buffer(self.open(_path, "rb").read(bytes_to_read))
 
 
 class OSFS(_OSFS, MagicMixin):
@@ -76,38 +86,48 @@ class ReadRarFS(_ReadRarFS, MagicMixin):
         super().__init__(file, encoding)
 
 
-_supported_formats = {
-    ".zip": ReadZipFS,
-    ".gz": ReadTarFS,
-    ".tar": ReadTarFS,
-    ".rar": ReadRarFS,
-    "application/gzip": ReadTarFS,
-    "application/zip": ReadZipFS,
+_known_ext = {
+    ".zip": "application/zip",
+    ".rar": "application/x-tar",
+    ".tar": "application/x-tar",
+    ".gz": "application/gzip",
+    ".bz2": "application/x-bzip2",
+    # force --mime-type -z for files without ext
+    "": "application/gzip",
 }
 
-_unsupported_formats = {(".synctex", ".gz")}
+_compressed = {"application/x-bzip2", "application/gzip"}
+
+_supported_mime_types = {
+    "application/zip": ReadZipFS,
+    "application/x-tar": ReadTarFS,
+    "application/x-rar": ReadRarFS,
+    # "application/x-lzh-compressed": TODO
+}
 
 
-def _key(parent_fs, path):
+@lru_cache(maxsize=8)
+def _archive_type(parent_fs, path):
 
-    if tuple(parent_fs.getinfo(path).suffixes) in _unsupported_formats:
-        return "unsupported"
+    # if tuple(parent_fs.getinfo(path).suffixes)[-2:] in _unsupported_formats_2:
+    #     return "unsupported"
 
-    _key = parent_fs.getinfo(path).suffix
-    if not _key:
-        _key = parent_fs.magic(path, mime=True)
+    mime = _known_ext.get(parent_fs.getinfo(path).suffix, None)
+    if mime is not None:
+        # refine mime-type using magic bytes
+        mime = parent_fs.magic(path, mime=True, uncompress=mime in _compressed)
 
-    return _key
+    return mime
 
 
 def is_archive(parent_fs, path):
 
-    return _key(parent_fs, path) in _supported_formats.keys()
+    return _archive_type(parent_fs, path) in _supported_mime_types
 
 
 def mount_archive(parent_fs, path):
 
-    mount_fs = _supported_formats.get(_key(parent_fs, path), None)
+    mount_fs = _supported_mime_types.get(_archive_type(parent_fs, path), None)
     if mount_fs:
         return mount_fs(parent_fs.open(path, "rb"))
     else:
