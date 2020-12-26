@@ -2,7 +2,7 @@
 
 This is a tiny library that combines [PyFilesystem2](https://docs.pyfilesystem.org/en/latest/index.html) and [python-magic](https://pypi.org/project/python-magic/). It is built for a project I'm working on to analyse data packages. Some of them are 'nested' archives, such a weird case when a zip file is stored within another zip file and nobody guarantee that the former does not contain a rar archive🙀.
 
-Could it be useful for you? Maybe, especially if you want 
+Could the library be useful for you? Maybe, especially if you want 
  - to add a little bit of [magic](https://pypi.org/project/python-magic/) into [pyfilesystem2](https://docs.pyfilesystem.org/en/latest/guide.html#why-use-pyfilesystem) to find out a signal within a messy data pile 😄
  - to open [rar archives](https://rarfile.readthedocs.io/index.html) with [pyfilesystem2](https://docs.pyfilesystem.org/en/latest/guide.html#why-use-pyfilesystem)
 
