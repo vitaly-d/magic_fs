@@ -90,6 +90,7 @@ _known_ext = {
     ".zip": "application/zip",
     ".rar": "application/x-tar",
     ".tar": "application/x-tar",
+    ".tgz": "application/gzip",
     ".gz": "application/gzip",
     ".bz2": "application/x-bzip2",
     # force --mime-type -z for files without ext
@@ -101,6 +102,7 @@ _compressed = {"application/x-bzip2", "application/gzip"}
 _supported_mime_types = {
     "application/zip": ReadZipFS,
     "application/x-tar": ReadTarFS,
+    "application/gzip": ReadTarFS,
     "application/x-rar": ReadRarFS,
     # "application/x-lzh-compressed": TODO
 }
